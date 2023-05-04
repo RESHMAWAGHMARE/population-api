@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>{{ country_name }}</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Year</th>
+        <th>Population</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for data in population_data %}
+        <tr>
+          <td>{{ data.date }}</td>
+          <td>{{ data.value }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

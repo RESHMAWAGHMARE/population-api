@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Country List</title>
+</head>
+<body>
+    <h1>Country List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Country Name</th>
+                <th>ISO2 Code</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for country in countries %}
+                <tr>
+                    <td>{{ country.name }}</td>
+                    <td>{{ country.iso2code }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

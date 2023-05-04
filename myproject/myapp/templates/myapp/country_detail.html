@@ -1,0 +1,80 @@
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.3/umd/popper.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.1/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container">
+    <h1>{{ country_name }} Population</h1>
+    <div class="dropdown">
+      <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+        Select Year
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="year-dropdown">
+      </ul>
+    </div>
+    <br>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th>Population</th>
+        </tr>
+      </thead>
+      <tbody id="population-table">
+      </tbody>
+    </table>
+    <button type="button" class="btn btn-primary" id="all-data-button">Load all data</button>
+  </div>
+  <script>
+    $(document).ready(function() {
+      var iso2code = "{{ iso2code }}";
+      var api_url = "https://api.worldbank.org/v2/country/" + iso2code + "/indicator/SP.POP.TOTL?format=json&per_page=5000";
+
+      // Add the years to the dropdown
+      $.getJSON(api_url, function(data) {
+        var years = [];
+        $.each(data[1], function(index, value) {
+          if (value.value != null) {
+            var year = value.date.split(".")[0];
+            if ($.inArray(year, years) === -1) {
+              years.push(year);
+              $('#year-dropdown').append('<li><a class="dropdown-item" href="#">' + year + '</a></li>');
+            }
+          }
+        });
+
+        // Load the population data for the first year in the dropdown
+        loadPopulationData(api_url, years[0], data);
+      });
+
+      // Load the population data for the selected year
+      $('#year-dropdown').on('click', '.dropdown-item', function() {
+        var year = $(this).text();
+        $('#year-dropdown-button').html(year);
+        loadPopulationData(api_url, year, data);
+      });
+
+      // Function to load the population data for a given year
+      function loadPopulationData(api_url, year, data) {
+        $('#population-table').empty();
+        $.each(data[1], function(index, value) {
+          if (value.date.split(".")[0] === year) {
+            $('#population-table').append('<tr><td>' + value.date.split(".")[0] + '</td><td>' + value.value + '</td></tr>');
+          }
+        });
+      }
+
+      // Load all the population data
+      $('#all-data-button').click(function() {
+        $('#population-table').empty();
+        $.each(data[1], function(index, value) {
+          if (value.value != null) {
+            $('#population-table').append('<tr><td>' + value.date.split(".")[0] + '</td><td>' + value.value + '</td></tr>');
+          }
+        });
+      });
+    });
+  </script>
+</body>
