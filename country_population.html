@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Country Population{% endblock %}
+
+{% block content %}
+  <h1>Country Population</h1>
+  <ul>
+    {% for country in countries %}
+      <li><a href="{% url 'country_detail' country.iso2Code %}">{{ country.name }}</a></li>
+    {% endfor %}
+  </ul>
+{% endblock %}
